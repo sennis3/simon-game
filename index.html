@@ -16,12 +16,8 @@
         var colorPattern = [];
         var colorPatternIdx = 0;
         var colorZones = [colors[0], colors[1], colors[2], colors[3]];
-        //let color1 = "green"; //{unlit: "green", lit: "lime"};
-        //let color2 = "red"; //{unlit: "red", lit: "pink"};
-        //let color3 = "yellow"; //{unlit: "yellow", lit: "lightyellow"};
-        //let color4 = "blue"; //{unlit: "blue", lit: "cyan"};
-        let coordX = 0;
-        let coordY = 0;
+        //let coordX = 0;
+        //let coordY = 0;
         let score = 0;
         let highscore = 0;
         let gameover = "";
@@ -67,17 +63,13 @@
                 }
                 else if (!cursorDisabled) {
                     resetColors();
-                    /*colorZones[0] = "green";
-                    colorZones[1] = "red";
-                    colorZones[2] = "yellow";
-                    colorZones[3] = "blue";*/
                 }
             }
             
             //Detects if a color zone is clicked
             document.onmousedown = function(e) {
-                coordX = event.clientX;
-                coordY = event.clientY;
+                //coordX = event.clientX;
+                //coordY = event.clientY;
 
                 if (distanceFormula(circle.x, circle.y, event.clientX, event.clientY) < circle.radius && !cursorDisabled) {
                     if (event.clientX < circle.x) {
@@ -110,9 +102,11 @@
                 }
             };
 
-            ctx.clearRect(0, 0, c.width, c.height);
+
+            ctx.clearRect(0, 0, c.width, c.height); //clears the screen
             
-            //Draw color zones
+
+            //Draws color zones
 
             ctx.fillStyle = colorZones[0];
             ctx.beginPath();
@@ -138,6 +132,7 @@
             ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI / 2);
             ctx.fill();
 
+
             //Display Text
             ctx.fillStyle = "black";
             ctx.font = '24px serif';
@@ -151,6 +146,7 @@
             //ctx.fillText("Click Y: " + coordY, 5, 70);
 
 
+            //Starts showing the color pattern when the player finished the previous one
             if (colorPatternIdx == colorPattern.length) {
                 //score = "adgsdfgd g";
                 colorPatternIdx = 0;
@@ -158,15 +154,6 @@
                 cursorDisabled = true;
                 resetColors();
                 colorDisplay(0);
-                //resetColors();
-                //cursorDisabled = false;
-                /*for (let i = 0; i < colorPattern.length; i++) {
-                    setTimeout(function () {
-                        resetColors();
-                        //let currColorVal = colorPattern[i];
-                        colorZones[colorPattern[i]] = litColors[colorPattern[i]];
-                    }, 2000);
-                }*/
             }
 
             window.requestAnimationFrame(draw);
@@ -191,12 +178,12 @@
         function colorDisplay(index) {
             setTimeout(function() {
                 resetColors();
-                if (index == colorPattern.length) {
+                if (index == colorPattern.length) { //Done when the pattern finishes
                     resetColors();
                     cursorDisabled = false;
                 }
                 else {
-                    colorZones[colorPattern[index]] = litColors[colorPattern[index]];
+                    colorZones[colorPattern[index]] = litColors[colorPattern[index]]; //lights up the color zone
                     index++;
                     if (index <= colorPattern.length) {
                         shortDelay(index);
@@ -215,11 +202,11 @@
 
         //Checks if the clicked color was the correct one in the pattern
         function checkCorrectColor(colorNum) {
-            if (colorNum == colorPattern[colorPatternIdx]) {
+            if (colorNum == colorPattern[colorPatternIdx]) { //correct choice - gets a point
                 score++;
                 colorPatternIdx++;
             }
-            else {
+            else { //Incorrect color chosen - game over
                 gameover = "Game Over - space for a new game";
                 if (score > highscore) {
                     highscore = score;
@@ -228,6 +215,7 @@
             }
         }
 
+        //Starts a new game - clears all variables
         function newGame(){
             colorPattern = [];
             colorPatternIdx = 0;
