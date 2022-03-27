@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simon</title>
+</head>
+<body>
+    <canvas id="animationCanvas" width="1200" height="700" style="border:1px solid #000000;"></canvas>
+
+    <script>
+        const c = document.getElementById("animationCanvas");   
+        const ctx = c.getContext("2d");
+
+        let circle = {x: 300, y: 300, radius: 200};
+        let colors = ["green", "red", "yellow", "blue"];
+        let litColors = ["lightgreen", "pink", "lightyellow", "lightblue"];
+        let colorPattern = [];
+        let colorPatternIdx = 0;
+        let colorZones = [colors[0], colors[1], colors[2], colors[3]];
+        //let color1 = "green"; //{unlit: "green", lit: "lime"};
+        //let color2 = "red"; //{unlit: "red", lit: "pink"};
+        //let color3 = "yellow"; //{unlit: "yellow", lit: "lightyellow"};
+        //let color4 = "blue"; //{unlit: "blue", lit: "cyan"};
+        let coordX = 0;
+        let coordY = 0;
+        let score = colorPattern.length;
+        let cursorDisabled = false;
+
+        function draw() {
+            
+            //Lights up color zone when cursor is over it
+            document.onmousemove = function(e) {
+                if (distanceFormula(circle.x, circle.y, event.clientX, event.clientY) < circle.radius && !cursorDisabled) {
+                    if (event.clientX < circle.x) {
+                        if (event.clientY < circle.y) {
+                            //green
+                            colorZones[0] = "lightgreen";
+                            colorZones[1] = "red";
+                            colorZones[2] = "yellow";
+                            colorZones[3] = "blue";
+                        }
+                        else {
+                            //yellow
+                            colorZones[2] = "lightyellow";
+                            colorZones[0] = "green";
+                            colorZones[1] = "red";
+                            colorZones[3] = "blue";
+                        }
+                    }
+                    else {
+                        if (event.clientY < circle.y) {
+                            //red
+                            colorZones[1] = "pink";
+                            colorZones[0] = "green";
+                            colorZones[2] = "yellow";
+                            colorZones[3] = "blue";
+                        }
+                        else {
+                            //blue
+                            colorZones[3] = "lightblue";
+                            colorZones[0] = "green";
+                            colorZones[1] = "red";
+                            colorZones[2] = "yellow";
+                        }
+                    }
+                }
+                else {
+                    resetColors();
+                    /*colorZones[0] = "green";
+                    colorZones[1] = "red";
+                    colorZones[2] = "yellow";
+                    colorZones[3] = "blue";*/
+                }
+            }
+            
+            //Detects if a color zone is clicked
+            document.onmousedown = function(e) {
+                coordX = event.clientX;
+                coordY = event.clientY;
+
+                if (distanceFormula(circle.x, circle.y, event.clientX, event.clientY) < circle.radius && !cursorDisabled) {
+                    if (event.clientX < circle.x) {
+                        if (event.clientY < circle.y) {
+                            //Green
+                            score = "green";
+                        }
+                        else {
+                            //Yellow
+                            score = "yellow";
+                        }
+                    }
+                    else {
+                        if (event.clientY < circle.y) {
+                            //Red
+                            score = "red";
+                        }
+                        else {
+                            //Blue
+                            score = "blue";
+                        }
+                    }
+                }
+            }
+
+            ctx.clearRect(0, 0, c.width, c.height);
+            
+            
+            //Draw color zones
+
+            ctx.fillStyle = colorZones[0];
+            ctx.beginPath();
+            ctx.moveTo(circle.x, circle.y);
+            ctx.arc(circle.x, circle.y, circle.radius, Math.PI, Math.PI * 3 / 2);
+            ctx.fill();
+
+            ctx.fillStyle = colorZones[1];
+            ctx.beginPath();
+            ctx.moveTo(circle.x, circle.y);
+            ctx.arc(circle.x, circle.y, circle.radius, Math.PI * 3 / 2, 0);
+            ctx.fill();
+
+            ctx.fillStyle = colorZones[2];
+            ctx.beginPath();
+            ctx.moveTo(circle.x, circle.y);
+            ctx.arc(circle.x, circle.y, circle.radius, Math.PI / 2, Math.PI);
+            ctx.fill();
+
+            ctx.fillStyle = colorZones[3];
+            ctx.beginPath();
+            ctx.moveTo(circle.x, circle.y);
+            ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI / 2);
+            ctx.fill();
+
+            //Display Text
+            ctx.fillStyle = "black";
+            ctx.font = '24px serif';
+            ctx.textAlign = 'left';
+            ctx.fillText("Score: " + score, 5, 25);
+            ctx.fillText("Click X: " + coordX, 5, 50);
+            ctx.fillText("Click Y: " + coordY, 5, 70);
+
+
+            /*if (colorPatternIdx == colorPattern.length) {
+                colorPatternIdx = 0;
+                colorPattern.push(Math.floor(Math.random() * 4));
+                cursorDisabled = true;
+                resetColors();
+                for (let i = 0; i < colorPattern.length; i++) {
+                    setTimeout(function () {
+                        let currColorVal = colorPattern[i];
+                        colorZones[colorPattern[i]] = litColors[colorPattern[i]];
+                    }, 1000);
+                }
+            }*/
+
+            window.requestAnimationFrame(draw);
+        }
+
+        //Calculates distance between two points
+        function distanceFormula(x1, y1, x2, y2) {
+            let x = Math.abs(x1-x2);
+            let y = Math.abs(y1-y2);
+            return Math.sqrt(x*x + y*y);
+        }
+
+        //Resets all color zones to unlit colors
+        function resetColors() {
+            colorZones[0] = colors[0];
+            colorZones[1] = colors[1];
+            colorZones[2] = colors[2];
+            colorZones[3] = colors[3];
+        }
+
+        window.requestAnimationFrame(draw);
+    </script>
+</body>
+</html>
