@@ -23,6 +23,8 @@
         let coordX = 0;
         let coordY = 0;
         let score = 0;
+        let highscore = 0;
+        let gameover = "";
         let cursorDisabled = false;
 
         function draw() {
@@ -101,8 +103,14 @@
                 }
             }
 
+            //Space bar starts a new game 
+            document.onkeydown = function(e) {
+                if (e.keyCode == 32) {
+                    newGame();
+                }
+            };
+
             ctx.clearRect(0, 0, c.width, c.height);
-            
             
             //Draw color zones
 
@@ -135,8 +143,12 @@
             ctx.font = '24px serif';
             ctx.textAlign = 'left';
             ctx.fillText("Score: " + score, 5, 25);
-            ctx.fillText("Click X: " + coordX, 5, 50);
-            ctx.fillText("Click Y: " + coordY, 5, 70);
+            ctx.fillText("Highscore: " + highscore, 5, 45);
+            ctx.fillText(gameover, 5, 65);
+            //ctx.textAlign = 'center';
+            //ctx.fillText(gameover, c.width/2, 25);
+            //ctx.fillText("Click X: " + coordX, 5, 50);
+            //ctx.fillText("Click Y: " + coordY, 5, 70);
 
 
             if (colorPatternIdx == colorPattern.length) {
@@ -193,16 +205,27 @@
             }, 1000);
         }
 
-        //
+        //Checks if the clicked color was the correct one in the pattern
         function checkCorrectColor(colorNum) {
             if (colorNum == colorPattern[colorPatternIdx]) {
                 score++;
                 colorPatternIdx++;
             }
             else {
-                score = "Game Over";
+                gameover = "Game Over - space for a new game";
+                if (score > highscore) {
+                    highscore = score;
+                }
                 cursorDisabled = true;
             }
+        }
+
+        function newGame(){
+            colorPattern = [];
+            colorPatternIdx = 0;
+            score = 0;
+            gameover = "";
+            resetColors();
         }
 
         window.requestAnimationFrame(draw);
