@@ -199,10 +199,18 @@
                     colorZones[colorPattern[index]] = litColors[colorPattern[index]];
                     index++;
                     if (index <= colorPattern.length) {
-                        colorDisplay(index);
+                        shortDelay(index);
                     }
                 }
-            }, 1000);
+            }, 200);
+        }
+
+        //Adds additional delay between colors displayed
+        function shortDelay(index) {
+            setTimeout(function() {
+                resetColors();
+                colorDisplay(index);
+            }, 800);
         }
 
         //Checks if the clicked color was the correct one in the pattern
