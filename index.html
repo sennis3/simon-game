@@ -13,8 +13,8 @@
         let circle = {x: 300, y: 300, radius: 200};
         var colors = ["green", "red", "yellow", "blue"];
         var litColors = ["lightgreen", "pink", "lightyellow", "lightblue"];
-        var colorPattern = [1, 3, 0];
-        var colorPatternIdx = 3;
+        var colorPattern = [];
+        var colorPatternIdx = 0;
         var colorZones = [colors[0], colors[1], colors[2], colors[3]];
         //let color1 = "green"; //{unlit: "green", lit: "lime"};
         //let color2 = "red"; //{unlit: "red", lit: "pink"};
@@ -22,7 +22,7 @@
         //let color4 = "blue"; //{unlit: "blue", lit: "cyan"};
         let coordX = 0;
         let coordY = 0;
-        let score = colorPattern.length;
+        let score = 0;
         let cursorDisabled = false;
 
         function draw() {
@@ -81,21 +81,21 @@
                     if (event.clientX < circle.x) {
                         if (event.clientY < circle.y) {
                             //Green
-                            score = "green";
+                            checkCorrectColor(0);
                         }
                         else {
                             //Yellow
-                            score = "yellow";
+                            checkCorrectColor(2);
                         }
                     }
                     else {
                         if (event.clientY < circle.y) {
                             //Red
-                            score = "red";
+                            checkCorrectColor(1);
                         }
                         else {
                             //Blue
-                            score = "blue";
+                            checkCorrectColor(3);
                         }
                     }
                 }
@@ -140,7 +140,7 @@
 
 
             if (colorPatternIdx == colorPattern.length) {
-                score = "adgsdfgd g";
+                //score = "adgsdfgd g";
                 colorPatternIdx = 0;
                 colorPattern.push(Math.floor(Math.random() * 4));
                 cursorDisabled = true;
@@ -191,6 +191,18 @@
                     }
                 }
             }, 1000);
+        }
+
+        //
+        function checkCorrectColor(colorNum) {
+            if (colorNum == colorPattern[colorPatternIdx]) {
+                score++;
+                colorPatternIdx++;
+            }
+            else {
+                score = "Game Over";
+                cursorDisabled = true;
+            }
         }
 
         window.requestAnimationFrame(draw);
