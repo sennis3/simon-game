@@ -2,15 +2,28 @@
 <html>
 <head>
     <title>Simon</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            border: 0;
+            overflow: hidden;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="animationCanvas" width="1200" height="700" style="border:1px solid #000000;"></canvas>
+    <canvas id="animationCanvas" width="1200" height="700"></canvas>
 
     <script>
         const c = document.getElementById("animationCanvas");   
         const ctx = c.getContext("2d");
-
-        let circle = {x: 300, y: 300, radius: 200};
+        c.width  = window.innerWidth;
+        c.height = window.innerHeight;
+        //let circleRadius = (c.width < c.height) ? c.width / 4 : c.height / 4;
+        let circle = {x: c.width/2, y: c.height/2, radius: ((c.width < c.height) ? c.width / 4 : c.height / 4)};
         var colors = ["green", "red", "yellow", "blue"];
         var litColors = ["lightgreen", "pink", "lightyellow", "lightblue"];
         var colorPattern = [];
@@ -20,10 +33,18 @@
         //let coordY = 0;
         let score = 0;
         let highscore = 0;
-        let gameover = "";
+        let gameoverTxt1 = "";
+        let gameoverTxt2 = "";
         let cursorDisabled = false;
 
         function draw() {
+
+            //Changes size values and positions when window is resized
+            window.onresize = function() {
+                c.width  = window.innerWidth;
+                c.height = window.innerHeight;
+                circle = {x: c.width/2, y: c.height/2, radius: ((c.width < c.height) ? c.width / 4 : c.height / 4)};
+            }
             
             //Lights up color zone when cursor is over it
             document.onmousemove = function(e) {
@@ -135,20 +156,20 @@
 
             //Display Text
             ctx.fillStyle = "black";
-            ctx.font = '24px serif';
+            //ctx.font = '24px serif';
+            ctx.font = c.height / 16 + 'px serif';
             ctx.textAlign = 'left';
-            ctx.fillText("Score: " + score, 5, 25);
-            ctx.fillText("Highscore: " + highscore, 5, 45);
-            ctx.fillText(gameover, 5, 65);
-            //ctx.textAlign = 'center';
-            //ctx.fillText(gameover, c.width/2, 25);
+            ctx.fillText("Score: " + score, 20, c.height / 20 * 2);
+            ctx.fillText("Highscore: " + highscore, 20, c.height / 20 * 3.5);
+            ctx.textAlign = 'center';
+            ctx.fillText(gameoverTxt1, c.width/2, c.height / 20 * 17.5);
+            ctx.fillText(gameoverTxt2, c.width/2, c.height / 20 * 19);
             //ctx.fillText("Click X: " + coordX, 5, 50);
             //ctx.fillText("Click Y: " + coordY, 5, 70);
 
 
             //Starts showing the color pattern when the player finished the previous one
             if (colorPatternIdx == colorPattern.length) {
-                //score = "adgsdfgd g";
                 colorPatternIdx = 0;
                 colorPattern.push(Math.floor(Math.random() * 4));
                 cursorDisabled = true;
@@ -207,7 +228,8 @@
                 colorPatternIdx++;
             }
             else { //Incorrect color chosen - game over
-                gameover = "Game Over - space for a new game";
+                gameoverTxt1 = "Game Over";
+                gameoverTxt2 = "Press space for a new game";
                 if (score > highscore) {
                     highscore = score;
                 }
@@ -220,7 +242,8 @@
             colorPattern = [];
             colorPatternIdx = 0;
             score = 0;
-            gameover = "";
+            gameoverTxt1 = "";
+            gameoverTxt2 = "";
             resetColors();
         }
 
